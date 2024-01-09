@@ -1,0 +1,171 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`empty args 1`] = `
+{
+  "elements": [],
+  "errors": [],
+}
+`;
+
+exports[`empty strings are ignored 1`] = `
+{
+  "elements": [
+    {
+      "type": "free",
+      "value": "a",
+    },
+    {
+      "type": "free",
+      "value": "b",
+    },
+    {
+      "type": "free",
+      "value": "c",
+    },
+  ],
+  "errors": [],
+}
+`;
+
+exports[`mixed arguments and options 1`] = `
+{
+  "elements": [
+    {
+      "type": "free",
+      "value": "rice",
+    },
+    {
+      "isShort": false,
+      "name": "sausage",
+      "type": "option",
+    },
+    {
+      "type": "free",
+      "value": "french",
+    },
+    {
+      "isShort": true,
+      "name": "f",
+      "type": "option",
+    },
+    {
+      "type": "free",
+      "value": "ries",
+    },
+  ],
+  "errors": [],
+}
+`;
+
+exports[`multiple long options 1`] = `
+{
+  "elements": [
+    {
+      "isShort": false,
+      "name": "bread",
+      "type": "option",
+    },
+    {
+      "isShort": false,
+      "name": "eggs",
+      "type": "option",
+    },
+    {
+      "isShort": false,
+      "name": "ham",
+      "type": "option",
+    },
+  ],
+  "errors": [],
+}
+`;
+
+exports[`multiple positional args 1`] = `
+{
+  "elements": [
+    {
+      "type": "free",
+      "value": "foo",
+    },
+    {
+      "type": "free",
+      "value": "bar",
+    },
+    {
+      "type": "free",
+      "value": "baz",
+    },
+  ],
+  "errors": [],
+}
+`;
+
+exports[`multiple short options 1`] = `
+{
+  "elements": [
+    {
+      "isShort": true,
+      "name": "x",
+      "type": "option",
+    },
+    {
+      "isShort": true,
+      "name": "y",
+      "type": "option",
+    },
+    {
+      "isShort": true,
+      "name": "z",
+      "type": "option",
+    },
+  ],
+  "errors": [],
+}
+`;
+
+exports[`one long option 1`] = `
+{
+  "elements": [
+    {
+      "isShort": false,
+      "name": "foo",
+      "type": "option",
+    },
+  ],
+  "errors": [],
+}
+`;
+
+exports[`one positional arg 1`] = `
+{
+  "elements": [
+    {
+      "type": "free",
+      "value": "foo",
+    },
+  ],
+  "errors": [],
+}
+`;
+
+exports[`one short option 1`] = `
+{
+  "elements": [
+    {
+      "isShort": true,
+      "name": "a",
+      "type": "option",
+    },
+  ],
+  "errors": [],
+}
+`;
+
+exports[`short options must be a single character 1`] = `
+{
+  "elements": [],
+  "errors": [
+    "invalid option "-foo": short options must only use a single character",
+  ],
+}
+`;

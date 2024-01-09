@@ -24,6 +24,7 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": "off",
     "n/no-missing-import": "off",
     "prefer-const": "off",
+    "unicorn/prefer-ternary": "off",
     "unicorn/prevent-abbreviations": "off",
   },
   overrides: [

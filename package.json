@@ -1,0 +1,36 @@
+{
+  "name": "optane",
+  "version": "0.1.0",
+  "description": "Command line arguments parser",
+  "license": "MIT",
+  "sideEffects": false,
+  "type": "module",
+  "exports": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "lint": "eslint --cache --ext .ts,.js . && prettier -c src",
+    "lint:fix": "eslint --cache --fix --ext .ts,.js . && prettier -w src",
+    "build": "yarn lint && yarn tsc --noEmit --skipLibCheck && unbuild",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
+    "@typescript-eslint/parser": "^6.18.1",
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-n": "^16.6.1",
+    "eslint-plugin-unicorn": "^50.0.1",
+    "prettier": "^3.1.1",
+    "typescript": "^5.3.3",
+    "unbuild": "^2.0.0",
+    "vitest": "^1.1.3"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "packageManager": "yarn@4.0.2"
+}

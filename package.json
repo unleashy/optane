@@ -1,8 +1,16 @@
 {
   "name": "optane",
   "version": "0.1.0",
+  "author": "unleashy",
   "description": "Command line arguments parser",
+  "keywords": [
+    "cli",
+    "command",
+    "args",
+    "options"
+  ],
   "license": "MIT",
+  "repository": "github:unleashy/optane",
   "sideEffects": false,
   "type": "module",
   "exports": "./dist/index.mjs",

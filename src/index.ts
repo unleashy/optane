@@ -75,11 +75,17 @@ export function optane<S extends Spec>(argv: string[], spec: S): Result<S> {
           } else {
             let option = `${element.isShort ? "-" : "--"}${element.name}`;
 
-            errors.push(
-              element.name === canonicalName
-                ? `${option}: ${result.error}`
-                : `${option} (alias of --${canonicalName}): ${result.error}`,
-            );
+            if (element.name === canonicalName) {
+              errors.push(`${option}: ${result.error}`);
+            } else {
+              let canonicalOption = `${
+                canonicalName.length === 1 ? "-" : "--"
+              }${canonicalName}`;
+
+              errors.push(
+                `${option} (alias of ${canonicalOption}): ${result.error}`,
+              );
+            }
           }
         } else {
           errors.push(
@@ -175,5 +181,9 @@ if (import.meta.vitest) {
     expect(
       optane(["-o", "name"], { foo: t.string().alias("o") }),
     ).toMatchSnapshot();
+  });
+
+  test("short canonical option is rendered properly for error", () => {
+    expect(optane(["--foo"], { o: t.string().alias("foo") })).toMatchSnapshot();
   });
 }

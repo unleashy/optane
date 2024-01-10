@@ -106,6 +106,19 @@ exports[`positional arguments are forwarded 1`] = `
 }
 `;
 
+exports[`short canonical option is rendered properly for error 1`] = `
+{
+  "args": [],
+  "errors": [
+    "--foo (alias of -o): missing value for option",
+  ],
+  "options": {
+    "help": false,
+    "o": undefined,
+  },
+}
+`;
+
 exports[`skips the first two argv if it is process.argv 1`] = `
 {
   "args": [],

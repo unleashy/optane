@@ -42,6 +42,16 @@ export function optane<S extends Spec>(argv: string[], spec: S): Result<S> {
       handler.alias().map((alias) => [alias, canonicalName]),
     ),
   );
+  let getHandler = (name: string) => {
+    if (name in specWithHelp) {
+      return { canonicalName: name, handler: specWithHelp[name] };
+    } else if (name in aliases) {
+      let canonicalName = aliases[name];
+      return { canonicalName, handler: specWithHelp[canonicalName] };
+    } else {
+      return { canonicalName: undefined, handler: undefined };
+    }
+  };
 
   let options = mapValues(specWithHelp, (handler) =>
     handler.default(),
@@ -50,51 +60,36 @@ export function optane<S extends Spec>(argv: string[], spec: S): Result<S> {
   let args: string[] = [];
 
   for (let i = 0; i < elements.length; ) {
-    let element = elements[i];
+    let element = elements[i++];
     switch (element.type) {
       case "option": {
-        if (element.name in specWithHelp) {
-          let result = specWithHelp[element.name].exec(elements, i + 1);
-          if (result.ok) {
-            options[element.name] = result.value;
-
-            i = result.nextIndex;
-          } else {
-            errors.push(
-              `${element.isShort ? "-" : "--"}${element.name}: ${result.error}`,
-            );
-
-            ++i;
-          }
-        } else if (element.name in aliases) {
-          let canonicalName = aliases[element.name];
-          let result = specWithHelp[canonicalName].exec(elements, i + 1);
+        let { canonicalName, handler } = getHandler(element.name);
+        if (canonicalName && handler) {
+          let result = handler.exec(elements, i);
           if (result.ok) {
             options[canonicalName] = result.value;
 
             i = result.nextIndex;
           } else {
-            errors.push(
-              `${element.isShort ? "-" : "--"}${element.name} ` +
-                `(alias of --${canonicalName}): ${result.error}`,
-            );
+            let option = `${element.isShort ? "-" : "--"}${element.name}`;
 
-            ++i;
+            errors.push(
+              element.name === canonicalName
+                ? `${option}: ${result.error}`
+                : `${option} (alias of --${canonicalName}): ${result.error}`,
+            );
           }
         } else {
           errors.push(
             `${element.isShort ? "-" : "--"}${element.name}: unknown option`,
           );
-
-          ++i;
         }
+
         break;
       }
 
       case "free": {
         args.push(element.value);
-
-        ++i;
         break;
       }
 

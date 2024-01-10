@@ -3,13 +3,20 @@ import { parse } from "./parser.ts";
 import * as t from "./handlers.ts";
 import type { Handler, HandlerType } from "./handlers.ts";
 
+function flatMapObject<K extends string, V, L extends string, U>(
+  obj: Record<K, V>,
+  f: (k: K, v: V) => Array<[L, U]>,
+): Record<L, U> {
+  return Object.fromEntries(
+    Object.entries(obj).flatMap(([k, v]) => f(k as K, v as V)),
+  ) as Record<L, U>;
+}
+
 function mapValues<K extends string, V, U>(
   obj: Record<K, V>,
   f: (v: V) => U,
 ): Record<K, U> {
-  return Object.fromEntries(
-    Object.entries(obj).map(([k, v]) => [k, f(v as V)]),
-  ) as Record<K, U>;
+  return flatMapObject(obj, (k, v) => [[k, f(v)]]);
 }
 
 export type Spec = Record<string, Handler<unknown>>;
@@ -33,14 +40,9 @@ export type Result<S extends Spec> = {
 };
 
 export function optane<S extends Spec>(argv: string[], spec: S): Result<S> {
-  let realArgv = argv === process.argv ? argv.slice(2) : argv;
-  let { elements, errors } = parse(realArgv);
-
   let specWithHelp = { help: t.bool().alias("h"), ...spec };
-  let aliases = Object.fromEntries(
-    Object.entries(specWithHelp).flatMap(([canonicalName, handler]) =>
-      handler.alias().map((alias) => [alias, canonicalName]),
-    ),
+  let aliases = flatMapObject(specWithHelp, (canonicalName, handler) =>
+    handler.alias().map((alias) => [alias, canonicalName]),
   );
   let getHandler = (name: string) => {
     if (name in specWithHelp) {
@@ -53,11 +55,11 @@ export function optane<S extends Spec>(argv: string[], spec: S): Result<S> {
     }
   };
 
-  let options = mapValues(specWithHelp, (handler) =>
-    handler.default(),
-  ) as Options<Spec>;
-
+  let options = mapValues(specWithHelp, (h) => h.default()) as Options<Spec>;
   let args: string[] = [];
+
+  let realArgv = argv === process.argv ? argv.slice(2) : argv;
+  let { elements, errors } = parse(realArgv);
 
   for (let i = 0; i < elements.length; ) {
     let element = elements[i++];

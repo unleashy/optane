@@ -1,8 +1,8 @@
-# optane
+# ☣️ optane
 
 A command line parser.
 
-## Usage
+## 🆘 Usage
 
 In your CLI script, import and call `optane` with the `process.argv` and a
 parameter specification:
@@ -51,6 +51,14 @@ Options:
   -v | --verbose           Verbose
 ```
 
-## Licence
+## 💻 Development
+
+1. Clone this repository
+2. Enable Corepack with `corepack enable`
+3. Install dependencies with `yarn install`
+4. Test with `yarn test`
+5. Code, commit, etc.
+
+## ⚖️ Licence
 
 [MIT.](LICENSE.txt)

@@ -165,7 +165,50 @@ exports[`short options must be a single character 1`] = `
 {
   "elements": [],
   "errors": [
-    "invalid option "-foo": short options must only use a single character",
+    "-foo: short options must only use a single character",
   ],
+}
+`;
+
+exports[`snake-case becomes camelCase 1`] = `
+{
+  "elements": [
+    {
+      "isShort": false,
+      "name": "aB",
+      "type": "option",
+    },
+    {
+      "isShort": false,
+      "name": "fooBar",
+      "type": "option",
+    },
+    {
+      "isShort": false,
+      "name": "isTheThingOn",
+      "type": "option",
+    },
+    {
+      "isShort": false,
+      "name": "a",
+      "type": "option",
+    },
+    {
+      "isShort": false,
+      "name": "a--b--c",
+      "type": "option",
+    },
+    {
+      "isShort": false,
+      "name": "a-",
+      "type": "option",
+    },
+    {
+      "isShort": false,
+      "name": "-b",
+      "type": "option",
+    },
+  ],
+  "errors": [],
 }
 `;

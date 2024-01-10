@@ -1,0 +1,169 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`basic string option 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "foo": "bar",
+    "help": false,
+  },
+}
+`;
+
+exports[`boolean options 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "awesome": true,
+    "epic": false,
+    "help": false,
+    "isCool": true,
+  },
+}
+`;
+
+exports[`empty spec 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "help": false,
+  },
+}
+`;
+
+exports[`help option is always present 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "help": true,
+  },
+}
+`;
+
+exports[`help option is always present 2`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "help": true,
+  },
+}
+`;
+
+exports[`mixed options and arguments 1`] = `
+{
+  "args": [
+    "a",
+    "else",
+  ],
+  "errors": [],
+  "options": {
+    "baz": true,
+    "bux": "something",
+    "foo": "bar",
+    "help": false,
+  },
+}
+`;
+
+exports[`option with long alias 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "foo": "name",
+    "help": false,
+  },
+}
+`;
+
+exports[`option with short alias 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "foo": "name",
+    "help": false,
+  },
+}
+`;
+
+exports[`positional arguments are forwarded 1`] = `
+{
+  "args": [
+    "a",
+    "b",
+    "c",
+  ],
+  "errors": [],
+  "options": {
+    "help": false,
+  },
+}
+`;
+
+exports[`skips the first two argv if it is process.argv 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "help": false,
+  },
+}
+`;
+
+exports[`string option requires argument 1`] = `
+{
+  "args": [],
+  "errors": [
+    "--wrong: missing value for option",
+  ],
+  "options": {
+    "help": false,
+    "wrong": undefined,
+  },
+}
+`;
+
+exports[`string option requires argument 2`] = `
+{
+  "args": [],
+  "errors": [
+    "--wrong: missing value for option",
+    "--wrong: missing value for option",
+  ],
+  "options": {
+    "help": false,
+    "wrong": undefined,
+  },
+}
+`;
+
+exports[`string option with default 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "food": "bread",
+    "help": false,
+  },
+}
+`;
+
+exports[`undefined options are errors 1`] = `
+{
+  "args": [],
+  "errors": [
+    "--what: unknown option",
+    "--the: unknown option",
+    "-f: unknown option",
+  ],
+  "options": {
+    "help": false,
+  },
+}
+`;

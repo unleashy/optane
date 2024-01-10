@@ -1,3 +1,10 @@
+function snakeToCamel(snake: string): string {
+  return snake.replaceAll(
+    /([^-])-([^-])/g,
+    (_, l: string, r: string) => `${l}${r.toUpperCase()}`,
+  );
+}
+
 export type Element =
   | { type: "option"; name: string; isShort: boolean }
   | { type: "free"; value: string };
@@ -11,22 +18,18 @@ export function parse(argv: string[]): Result {
 
   let errors: string[] = [];
   let elements: Element[] = cleanArgv.flatMap((arg): Element[] => {
-    if (arg.startsWith("-")) {
-      if (arg.startsWith("--")) {
-        let name = arg.slice(2);
+    if (arg.startsWith("--")) {
+      let name = snakeToCamel(arg.slice(2));
 
-        return [{ type: "option", name, isShort: false }];
-      } else {
-        let name = arg.slice(1);
-        if (name.length > 1) {
-          errors.push(
-            `invalid option "-${name}": short options must only use a single character`,
-          );
-          return [];
-        }
-
-        return [{ type: "option", name, isShort: true }];
+      return [{ type: "option", name, isShort: false }];
+    } else if (arg.startsWith("-")) {
+      let name = arg.slice(1);
+      if (name.length > 1) {
+        errors.push(`-${name}: short options must only use a single character`);
+        return [];
       }
+
+      return [{ type: "option", name, isShort: true }];
     } else {
       return [{ type: "free", value: arg }];
     }
@@ -79,6 +82,20 @@ if (import.meta.vitest) {
   test("mixed arguments and options", () => {
     expect(
       parse(["rice", "--sausage", "french", "-f", "ries"]),
+    ).toMatchSnapshot();
+  });
+
+  test("snake-case becomes camelCase", () => {
+    expect(
+      parse([
+        "--a-b",
+        "--foo-bar",
+        "--is-the-thing-on",
+        "--a",
+        "--a--b--c",
+        "--a-",
+        "---b",
+      ]),
     ).toMatchSnapshot();
   });
 }

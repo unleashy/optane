@@ -40,7 +40,7 @@ $ node .\cli.js -h
 Awesome CLI v1.0.0
 
 Usage:
-  .\cli.js [option] [arguments...]
+  .\cli.js [options] [arguments...]
 
 Options:
   -h | --help              Show help

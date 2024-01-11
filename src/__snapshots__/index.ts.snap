@@ -24,6 +24,19 @@ exports[`boolean options 1`] = `
 }
 `;
 
+exports[`curried 1`] = `
+{
+  "args": [
+    "foo",
+    "bar",
+  ],
+  "errors": [],
+  "options": {
+    "help": false,
+  },
+}
+`;
+
 exports[`empty spec 1`] = `
 {
   "args": [],

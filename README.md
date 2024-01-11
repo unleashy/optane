@@ -51,6 +51,23 @@ Options:
   -v | --verbose           Verbose
 ```
 
+### 🍛 Currying
+
+You may also call `optane` with just the spec. It’ll return a function taking
+the argv and returning the parsed options, just like calling `optane` normally.
+
+```typescript
+const cli = optane({
+  foo: t.string(),
+  verbose: t.bool().alias("v"),
+  some: t.string(),
+  i: t.int().repeats().help("Custom help text"),
+  forgotten: t.enum("yes", "no").default("yes"),
+});
+
+const result = cli(process.argv); // has .options, .args, .errors, as normal
+```
+
 ## 💻 Development
 
 1. Clone this repository

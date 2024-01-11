@@ -43,7 +43,9 @@ export type Result<S extends Spec> = {
   errors: string[];
 };
 
-export function optane<S extends Spec>(argv: string[], spec: S): Result<S> {
+export type Optane<S extends Spec> = (argv: string[]) => Result<S>;
+
+function compile<S extends Spec>(spec: S): Optane<S> {
   let specWithHelp = { help: t.bool().alias("h"), ...spec };
   let aliases = flatMapObject(specWithHelp, (canonicalName, handler) =>
     handler.alias().map((alias) => [alias, canonicalName]),
@@ -59,50 +61,69 @@ export function optane<S extends Spec>(argv: string[], spec: S): Result<S> {
     }
   };
 
-  let options = mapValues(specWithHelp, (h) => h.default()) as Options<Spec>;
-  let args: string[] = [];
+  let optionDefaults = mapValues(specWithHelp, (h) =>
+    h.default(),
+  ) as Options<Spec>;
 
-  let realArgv = argv === process.argv ? argv.slice(2) : argv;
-  let { elements, errors } = parse(realArgv);
+  return (argv) => {
+    let options = { ...optionDefaults };
+    let args = [];
 
-  for (let i = 0; i < elements.length; ) {
-    let element = elements[i++];
-    switch (element.type) {
-      case "option": {
-        let { canonicalName, handler } = getHandler(element.name);
-        if (canonicalName && handler) {
-          let result = handler.exec(elements, i);
-          if (result.ok) {
-            options[canonicalName] = result.value;
+    let realArgv = argv === process.argv ? argv.slice(2) : argv;
+    let { elements, errors } = parse(realArgv);
 
-            i = result.nextIndex;
-          } else {
-            let optionName = formatOption(element.name);
-            if (canonicalName !== element.name) {
-              optionName += ` (alias of ${formatOption(canonicalName)})`;
+    for (let i = 0; i < elements.length; ) {
+      let element = elements[i++];
+      switch (element.type) {
+        case "option": {
+          let { canonicalName, handler } = getHandler(element.name);
+          if (canonicalName && handler) {
+            let result = handler.exec(elements, i);
+            if (result.ok) {
+              options[canonicalName] = result.value;
+
+              i = result.nextIndex;
+            } else {
+              let optionName = formatOption(element.name);
+              if (canonicalName !== element.name) {
+                optionName += ` (alias of ${formatOption(canonicalName)})`;
+              }
+
+              errors.push(`${optionName}: ${result.error}`);
             }
-
-            errors.push(`${optionName}: ${result.error}`);
+          } else {
+            errors.push(`${formatOption(element.name)}: unknown option`);
           }
-        } else {
-          errors.push(`${formatOption(element.name)}: unknown option`);
+
+          break;
         }
 
-        break;
-      }
+        case "free": {
+          args.push(element.value);
+          break;
+        }
 
-      case "free": {
-        args.push(element.value);
-        break;
-      }
-
-      default: {
-        assert.fail(`Malformed element ${JSON.stringify(element)}`);
+        default: {
+          assert.fail(`Malformed element ${JSON.stringify(element)}`);
+        }
       }
     }
-  }
 
-  return { options: options as Options<S>, args, errors };
+    return { options: options as Options<S>, args, errors };
+  };
+}
+
+export function optane<S extends Spec>(spec: S): Optane<S>;
+export function optane<S extends Spec>(argv: string[], spec: S): Result<S>;
+export function optane<S extends Spec>(
+  argvOrSpec: string[] | S,
+  spec?: S,
+): Optane<S> | Result<S> {
+  if (spec) {
+    return compile(spec)(argvOrSpec as string[]);
+  } else {
+    return compile(argvOrSpec as S);
+  }
 }
 
 export * as t from "./handlers.ts";
@@ -129,15 +150,21 @@ if (import.meta.vitest) {
     expect(optane(["-h"], {})).toMatchSnapshot();
   });
 
+  test("curried", () => {
+    const getOpts = optane({});
+
+    expect(getOpts(["foo", "bar"])).toMatchSnapshot();
+  });
+
   test("basic string option", () => {
     expect(optane(["--foo", "bar"], { foo: t.string() })).toMatchSnapshot();
   });
 
   test("string option requires argument", () => {
-    expect(optane(["--wrong"], { wrong: t.string() })).toMatchSnapshot();
-    expect(
-      optane(["--wrong", "--wrong"], { wrong: t.string() }),
-    ).toMatchSnapshot();
+    let sut = optane({ wrong: t.string() });
+
+    expect(sut(["--wrong"])).toMatchSnapshot();
+    expect(sut(["--wrong", "--wrong"])).toMatchSnapshot();
   });
 
   test("undefined options are errors", () => {
@@ -185,7 +212,7 @@ if (import.meta.vitest) {
   });
 
   test("int option", () => {
-    const sut = (args: string[]) => optane(args, { port: t.int() });
+    const sut = optane({ port: t.int() });
 
     expect(sut(["--port", "8080"])).toMatchSnapshot();
     expect(sut(["--port", "nope"])).toMatchSnapshot();

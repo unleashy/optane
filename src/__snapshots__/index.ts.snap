@@ -109,6 +109,54 @@ exports[`mixed options and arguments 1`] = `
 }
 `;
 
+exports[`oneOf option 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "help": false,
+    "verbose": "low",
+  },
+}
+`;
+
+exports[`oneOf option 2`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "help": false,
+    "verbose": "medium",
+  },
+}
+`;
+
+exports[`oneOf option 3`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "help": false,
+    "verbose": "high",
+  },
+}
+`;
+
+exports[`oneOf option 4`] = `
+{
+  "args": [
+    "what",
+  ],
+  "errors": [
+    "--verbose: expected one of the valid values",
+  ],
+  "options": {
+    "help": false,
+    "verbose": undefined,
+  },
+}
+`;
+
 exports[`option with long alias 1`] = `
 {
   "args": [],

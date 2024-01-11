@@ -4,27 +4,29 @@ export const HandlerError = {
   unknown: "unknown problem",
   missingValue: "missing value for option",
   notInt: "expected an integer",
+  notOneOf: "expected one of the valid values",
 } as const;
-export type HandlerError = (typeof HandlerError)[keyof typeof HandlerError];
 
 export type HandlerResult<T> =
   | { ok: true; value: T; nextIndex: number }
-  | { ok: false; error: HandlerError };
-export type Handler<T> = {
+  | { ok: false; error: string };
+export type Handler<T, D extends T | undefined> = {
   exec(elements: Element[], i: number): HandlerResult<T>;
 
-  default(): T | undefined;
-  default(value: T): Handler<T>;
+  default(): D;
+  default(value: T): Handler<T, T>;
 
   alias(): string[];
-  alias(...names: string[]): Handler<T>;
+  alias(...names: string[]): Handler<T, D>;
 };
 
-export type HandlerType<H> = H extends Handler<infer T> ? T : never;
+export type HandlerType<H> = H extends Handler<infer T, infer D>
+  ? T | D
+  : never;
 
-export function createHandler<T>(
+export function createHandler<T, D extends T | undefined>(
   exec: (elements: Element[], i: number) => HandlerResult<T>,
-): Handler<T> {
+): Handler<T, D> {
   let defaultValue: T | undefined;
   let aliases: string[] = [];
 
@@ -46,7 +48,7 @@ export function createHandler<T>(
         return handler;
       }
     },
-  } as Handler<T>;
+  } as Handler<T, D>;
 
   return handler;
 }
@@ -76,6 +78,20 @@ export const int = () =>
         return { ok: true, value: Number(next.value), nextIndex: i + 1 };
       } else {
         return { ok: false, error: HandlerError.notInt };
+      }
+    } else {
+      return { ok: false, error: HandlerError.missingValue };
+    }
+  });
+
+export const oneOf = <K extends string>(...strings: [K, ...K[]]) =>
+  createHandler((elements, i) => {
+    let next = elements[i] as Element | undefined;
+    if (next && next.type === "free") {
+      if ((strings as string[]).includes(next.value)) {
+        return { ok: true, value: next.value as K, nextIndex: i + 1 };
+      } else {
+        return { ok: false, error: HandlerError.notOneOf };
       }
     } else {
       return { ok: false, error: HandlerError.missingValue };
@@ -158,6 +174,39 @@ if (import.meta.vitest) {
 
     it("has default undefined", () => {
       expect(int().default()).toBe(undefined);
+    });
+  });
+
+  describe("oneOf handler", () => {
+    it("uses the argument", () => {
+      expect(
+        oneOf("a", "b", "c").exec([{ type: "free", value: "a" }], 0),
+      ).toEqual({
+        ok: true,
+        value: "a",
+        nextIndex: 1,
+      });
+    });
+
+    it("expects an argument", () => {
+      let sut = oneOf("low", "high");
+
+      expect(sut.exec([], 0)).toEqual({
+        ok: false,
+        error: HandlerError.missingValue,
+      });
+      expect(sut.exec([{ type: "option", name: "low" }], 0)).toEqual({
+        ok: false,
+        error: HandlerError.missingValue,
+      });
+      expect(sut.exec([{ type: "free", value: "?" }], 0)).toEqual({
+        ok: false,
+        error: HandlerError.notOneOf,
+      });
+      expect(sut.exec([{ type: "free", value: "medium" }], 0)).toEqual({
+        ok: false,
+        error: HandlerError.notOneOf,
+      });
     });
   });
 }

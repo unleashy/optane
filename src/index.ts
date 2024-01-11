@@ -23,10 +23,10 @@ function formatOption(name: string): string {
   return name.length === 1 ? `-${name}` : `--${name}`;
 }
 
-export type Spec = Record<string, Handler<unknown>>;
+export type Spec = Record<string, Handler<unknown, unknown>>;
 
 export type Options<S extends Spec> = { help: boolean } & {
-  [P in keyof S]: HandlerType<S[P]> | undefined;
+  [P in keyof S]: HandlerType<S[P]>;
 };
 
 export type Result<S extends Spec> = {
@@ -61,9 +61,7 @@ function compile<S extends Spec>(spec: S): Optane<S> {
     }
   };
 
-  let optionDefaults = mapValues(specWithHelp, (h) =>
-    h.default(),
-  ) as Options<Spec>;
+  let optionDefaults = mapValues(specWithHelp, (h) => h.default());
 
   return (argv) => {
     let options = { ...optionDefaults };
@@ -216,5 +214,16 @@ if (import.meta.vitest) {
 
     expect(sut(["--port", "8080"])).toMatchSnapshot();
     expect(sut(["--port", "nope"])).toMatchSnapshot();
+  });
+
+  test("oneOf option", () => {
+    const sut = optane({
+      verbose: t.oneOf("low", "medium", "high"),
+    });
+
+    expect(sut(["--verbose", "low"])).toMatchSnapshot();
+    expect(sut(["--verbose", "medium"])).toMatchSnapshot();
+    expect(sut(["--verbose", "high"])).toMatchSnapshot();
+    expect(sut(["--verbose", "what"])).toMatchSnapshot();
   });
 }

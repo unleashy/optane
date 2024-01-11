@@ -15,7 +15,7 @@ const cli = optane(process.argv, {
   verbose: t.bool().alias("v"),
   some: t.string(),
   i: t.int().repeats().help("Custom help text"),
-  forgotten: t.enum("yes", "no").default("yes"),
+  forgotten: t.oneOf("yes", "no").default("yes"),
 });
 
 if (cli.options.help) {
@@ -62,7 +62,7 @@ const cli = optane({
   verbose: t.bool().alias("v"),
   some: t.string(),
   i: t.int().repeats().help("Custom help text"),
-  forgotten: t.enum("yes", "no").default("yes"),
+  forgotten: t.oneOf("yes", "no").default("yes"),
 });
 
 const result = cli(process.argv); // has .options, .args, .errors, as normal

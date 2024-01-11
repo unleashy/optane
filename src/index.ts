@@ -19,6 +19,10 @@ function mapValues<K extends string, V, U>(
   return flatMapObject(obj, (k, v) => [[k, f(v)]]);
 }
 
+function formatOption(name: string): string {
+  return name.length === 1 ? `-${name}` : `--${name}`;
+}
+
 export type Spec = Record<string, Handler<unknown>>;
 
 export type Options<S extends Spec> = { help: boolean } & {
@@ -73,24 +77,15 @@ export function optane<S extends Spec>(argv: string[], spec: S): Result<S> {
 
             i = result.nextIndex;
           } else {
-            let option = `${element.isShort ? "-" : "--"}${element.name}`;
-
-            if (element.name === canonicalName) {
-              errors.push(`${option}: ${result.error}`);
-            } else {
-              let canonicalOption = `${
-                canonicalName.length === 1 ? "-" : "--"
-              }${canonicalName}`;
-
-              errors.push(
-                `${option} (alias of ${canonicalOption}): ${result.error}`,
-              );
+            let optionName = formatOption(element.name);
+            if (canonicalName !== element.name) {
+              optionName += ` (alias of ${formatOption(canonicalName)})`;
             }
+
+            errors.push(`${optionName}: ${result.error}`);
           }
         } else {
-          errors.push(
-            `${element.isShort ? "-" : "--"}${element.name}: unknown option`,
-          );
+          errors.push(`${formatOption(element.name)}: unknown option`);
         }
 
         break;

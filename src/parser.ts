@@ -6,7 +6,7 @@ function snakeToCamel(snake: string): string {
 }
 
 export type Element =
-  | { type: "option"; name: string; isShort: boolean }
+  | { type: "option"; name: string }
   | { type: "free"; value: string };
 
 export type Result = { elements: Element[]; errors: string[] };
@@ -21,7 +21,7 @@ export function parse(argv: string[]): Result {
     if (arg.startsWith("--")) {
       let name = snakeToCamel(arg.slice(2));
 
-      return [{ type: "option", name, isShort: false }];
+      return [{ type: "option", name }];
     } else if (arg.startsWith("-")) {
       let name = arg.slice(1);
       if (name.length > 1) {
@@ -29,7 +29,7 @@ export function parse(argv: string[]): Result {
         return [];
       }
 
-      return [{ type: "option", name, isShort: true }];
+      return [{ type: "option", name }];
     } else {
       return [{ type: "free", value: arg }];
     }

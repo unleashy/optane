@@ -35,7 +35,6 @@ exports[`mixed arguments and options 1`] = `
       "value": "rice",
     },
     {
-      "isShort": false,
       "name": "sausage",
       "type": "option",
     },
@@ -44,7 +43,6 @@ exports[`mixed arguments and options 1`] = `
       "value": "french",
     },
     {
-      "isShort": true,
       "name": "f",
       "type": "option",
     },
@@ -61,17 +59,14 @@ exports[`multiple long options 1`] = `
 {
   "elements": [
     {
-      "isShort": false,
       "name": "bread",
       "type": "option",
     },
     {
-      "isShort": false,
       "name": "eggs",
       "type": "option",
     },
     {
-      "isShort": false,
       "name": "ham",
       "type": "option",
     },
@@ -104,17 +99,14 @@ exports[`multiple short options 1`] = `
 {
   "elements": [
     {
-      "isShort": true,
       "name": "x",
       "type": "option",
     },
     {
-      "isShort": true,
       "name": "y",
       "type": "option",
     },
     {
-      "isShort": true,
       "name": "z",
       "type": "option",
     },
@@ -127,7 +119,6 @@ exports[`one long option 1`] = `
 {
   "elements": [
     {
-      "isShort": false,
       "name": "foo",
       "type": "option",
     },
@@ -152,7 +143,6 @@ exports[`one short option 1`] = `
 {
   "elements": [
     {
-      "isShort": true,
       "name": "a",
       "type": "option",
     },
@@ -174,37 +164,30 @@ exports[`snake-case becomes camelCase 1`] = `
 {
   "elements": [
     {
-      "isShort": false,
       "name": "aB",
       "type": "option",
     },
     {
-      "isShort": false,
       "name": "fooBar",
       "type": "option",
     },
     {
-      "isShort": false,
       "name": "isTheThingOn",
       "type": "option",
     },
     {
-      "isShort": false,
       "name": "a",
       "type": "option",
     },
     {
-      "isShort": false,
       "name": "a--b--c",
       "type": "option",
     },
     {
-      "isShort": false,
       "name": "a-",
       "type": "option",
     },
     {
-      "isShort": false,
       "name": "-b",
       "type": "option",
     },

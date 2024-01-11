@@ -85,9 +85,7 @@ if (import.meta.vitest) {
         ok: false,
         error: HandlerError.missingValue,
       });
-      expect(
-        string().exec([{ type: "option", name: "foo", isShort: false }], 0),
-      ).toEqual({
+      expect(string().exec([{ type: "option", name: "foo" }], 0)).toEqual({
         ok: false,
         error: HandlerError.missingValue,
       });

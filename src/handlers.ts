@@ -24,63 +24,63 @@ export type HandlerType<H> = H extends Handler<infer T> ? T : never;
 
 export function createHandler<T>(
   exec: (elements: Element[], i: number) => HandlerResult<T>,
-): () => Handler<T> {
-  return () => {
-    let defaultValue: T | undefined;
-    let aliases: string[] = [];
+): Handler<T> {
+  let defaultValue: T | undefined;
+  let aliases: string[] = [];
 
-    let handler = {
-      exec,
-      default: (value?: T) => {
-        if (value === undefined) {
-          return defaultValue;
-        } else {
-          defaultValue = value;
-          return handler;
-        }
-      },
-      alias: (...names: string[]) => {
-        if (names.length === 0) {
-          return aliases;
-        } else {
-          aliases.push(...names);
-          return handler;
-        }
-      },
-    } as Handler<T>;
+  let handler = {
+    exec,
+    default: (value?: T) => {
+      if (value === undefined) {
+        return defaultValue;
+      } else {
+        defaultValue = value;
+        return handler;
+      }
+    },
+    alias: (...names: string[]) => {
+      if (names.length === 0) {
+        return aliases;
+      } else {
+        aliases.push(...names);
+        return handler;
+      }
+    },
+  } as Handler<T>;
 
-    return handler;
-  };
+  return handler;
 }
 
-export const string = createHandler((elements, i) => {
-  let next = elements[i] as Element | undefined;
-  if (next && next.type === "free") {
-    return { ok: true, value: next.value, nextIndex: i + 1 };
-  } else {
-    return { ok: false, error: HandlerError.missingValue };
-  }
-});
+export const string = () =>
+  createHandler((elements, i) => {
+    let next = elements[i] as Element | undefined;
+    if (next && next.type === "free") {
+      return { ok: true, value: next.value, nextIndex: i + 1 };
+    } else {
+      return { ok: false, error: HandlerError.missingValue };
+    }
+  });
 
 export const bool = () =>
   createHandler((_elements, i) => ({
     ok: true,
     value: true,
     nextIndex: i,
-  }))().default(false);
+  })).default(false);
 
-export const int = createHandler((elements, i) => {
-  let next = elements[i] as Element | undefined;
-  if (next && next.type === "free") {
-    if (/^\d+$/.test(next.value)) {
-      return { ok: true, value: Number(next.value), nextIndex: i + 1 };
+export const int = () =>
+  createHandler((elements, i) => {
+    let next = elements[i] as Element | undefined;
+    if (next && next.type === "free") {
+      if (/^\d+$/.test(next.value)) {
+        return { ok: true, value: Number(next.value), nextIndex: i + 1 };
+      } else {
+        return { ok: false, error: HandlerError.notInt };
+      }
     } else {
-      return { ok: false, error: HandlerError.notInt };
+      return { ok: false, error: HandlerError.missingValue };
     }
-  } else {
-    return { ok: false, error: HandlerError.missingValue };
-  }
-});
+  });
 
 ////////////////////////////////////////////////////////////////////////////////
 

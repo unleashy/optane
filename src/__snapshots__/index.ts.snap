@@ -54,6 +54,32 @@ exports[`help option is always present 2`] = `
 }
 `;
 
+exports[`int option 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "help": false,
+    "port": 8080,
+  },
+}
+`;
+
+exports[`int option 2`] = `
+{
+  "args": [
+    "nope",
+  ],
+  "errors": [
+    "--port: expected an integer",
+  ],
+  "options": {
+    "help": false,
+    "port": undefined,
+  },
+}
+`;
+
 exports[`mixed options and arguments 1`] = `
 {
   "args": [

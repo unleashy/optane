@@ -107,6 +107,8 @@ export function optane<S extends Spec>(argv: string[], spec: S): Result<S> {
 
 export * as t from "./handlers.ts";
 
+////////////////////////////////////////////////////////////////////////////////
+
 if (import.meta.vitest) {
   const { test, expect } = import.meta.vitest;
 
@@ -180,5 +182,12 @@ if (import.meta.vitest) {
 
   test("short canonical option is rendered properly for error", () => {
     expect(optane(["--foo"], { o: t.string().alias("foo") })).toMatchSnapshot();
+  });
+
+  test("int option", () => {
+    const sut = (args: string[]) => optane(args, { port: t.int() });
+
+    expect(sut(["--port", "8080"])).toMatchSnapshot();
+    expect(sut(["--port", "nope"])).toMatchSnapshot();
   });
 }

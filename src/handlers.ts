@@ -3,6 +3,7 @@ import { type Element } from "./parser.ts";
 export const HandlerError = {
   unknown: "unknown problem",
   missingValue: "missing value for option",
+  notInt: "expected an integer",
 } as const;
 export type HandlerError = (typeof HandlerError)[keyof typeof HandlerError];
 
@@ -68,6 +69,21 @@ export const bool = () =>
     nextIndex: i,
   }))().default(false);
 
+export const int = createHandler((elements, i) => {
+  let next = elements[i] as Element | undefined;
+  if (next && next.type === "free") {
+    if (/^\d+$/.test(next.value)) {
+      return { ok: true, value: Number(next.value), nextIndex: i + 1 };
+    } else {
+      return { ok: false, error: HandlerError.notInt };
+    }
+  } else {
+    return { ok: false, error: HandlerError.missingValue };
+  }
+});
+
+////////////////////////////////////////////////////////////////////////////////
+
 if (import.meta.vitest) {
   const { describe, it, expect } = import.meta.vitest;
 
@@ -113,6 +129,35 @@ if (import.meta.vitest) {
 
     it("has default false", () => {
       expect(bool().default()).toBe(false);
+    });
+  });
+
+  describe("int handler", () => {
+    it("uses the argument", () => {
+      expect(int().exec([{ type: "free", value: "1234" }], 0)).toEqual({
+        ok: true,
+        value: 1234,
+        nextIndex: 1,
+      });
+    });
+
+    it("expects an argument", () => {
+      expect(int().exec([], 0)).toEqual({
+        ok: false,
+        error: HandlerError.missingValue,
+      });
+      expect(int().exec([{ type: "option", name: "foo" }], 0)).toEqual({
+        ok: false,
+        error: HandlerError.missingValue,
+      });
+      expect(int().exec([{ type: "free", value: "not a number" }], 0)).toEqual({
+        ok: false,
+        error: HandlerError.notInt,
+      });
+    });
+
+    it("has default undefined", () => {
+      expect(int().default()).toBe(undefined);
     });
   });
 }

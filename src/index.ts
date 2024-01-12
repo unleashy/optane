@@ -101,6 +101,11 @@ function compile<S extends Spec>(spec: S): Optane<S> {
           break;
         }
 
+        case "end-options": {
+          // ignored!
+          break;
+        }
+
         default: {
           assert.fail(`Malformed element ${JSON.stringify(element)}`);
         }
@@ -225,5 +230,13 @@ if (import.meta.vitest) {
     expect(sut(["--verbose", "medium"])).toMatchSnapshot();
     expect(sut(["--verbose", "high"])).toMatchSnapshot();
     expect(sut(["--verbose", "what"])).toMatchSnapshot();
+  });
+
+  test("-- represents end of options", () => {
+    const sut = optane({ foo: t.string });
+
+    expect(sut(["--"])).toMatchSnapshot();
+    expect(sut(["--", "--foo"])).toMatchSnapshot();
+    expect(sut(["--foo", "--", "--foo"])).toMatchSnapshot();
   });
 }

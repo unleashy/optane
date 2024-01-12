@@ -1,5 +1,44 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`-- represents end of options 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "foo": undefined,
+    "help": false,
+  },
+}
+`;
+
+exports[`-- represents end of options 2`] = `
+{
+  "args": [
+    "--foo",
+  ],
+  "errors": [],
+  "options": {
+    "foo": undefined,
+    "help": false,
+  },
+}
+`;
+
+exports[`-- represents end of options 3`] = `
+{
+  "args": [
+    "--foo",
+  ],
+  "errors": [
+    "--foo: missing value for option",
+  ],
+  "options": {
+    "foo": undefined,
+    "help": false,
+  },
+}
+`;
+
 exports[`basic string option 1`] = `
 {
   "args": [],

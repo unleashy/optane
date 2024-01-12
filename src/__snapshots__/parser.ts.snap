@@ -1,5 +1,32 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`- is not interpreted as an option 1`] = `
+{
+  "elements": [
+    {
+      "type": "free",
+      "value": "-",
+    },
+  ],
+  "errors": [],
+}
+`;
+
+exports[`-- is interpreted as the end of options 1`] = `
+{
+  "elements": [
+    {
+      "type": "end-options",
+    },
+    {
+      "type": "free",
+      "value": "-a",
+    },
+  ],
+  "errors": [],
+}
+`;
+
 exports[`empty args 1`] = `
 {
   "elements": [],

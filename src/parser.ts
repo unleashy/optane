@@ -7,7 +7,8 @@ function snakeToCamel(snake: string): string {
 
 export type Element =
   | { type: "option"; name: string }
-  | { type: "free"; value: string };
+  | { type: "free"; value: string }
+  | { type: "end-options" };
 
 export type Result = { elements: Element[]; errors: string[] };
 
@@ -17,22 +18,32 @@ export function parse(argv: string[]): Result {
     .filter((value) => value.length > 0);
 
   let errors: string[] = [];
+  let optionsEnded = false;
   let elements: Element[] = cleanArgv.flatMap((arg): Element[] => {
-    if (arg.startsWith("--")) {
-      let name = snakeToCamel(arg.slice(2));
-
-      return [{ type: "option", name }];
-    } else if (arg.startsWith("-")) {
-      let name = arg.slice(1);
-      if (name.length > 1) {
-        errors.push(`-${name}: short options must only use a single character`);
-        return [];
+    if (!optionsEnded) {
+      if (arg === "--") {
+        optionsEnded = true;
+        return [{ type: "end-options" }];
       }
 
-      return [{ type: "option", name }];
-    } else {
-      return [{ type: "free", value: arg }];
+      if (arg.startsWith("--")) {
+        let name = snakeToCamel(arg.slice(2));
+
+        return [{ type: "option", name }];
+      } else if (arg.startsWith("-") && arg !== "-") {
+        let name = arg.slice(1);
+        if (name.length > 1) {
+          errors.push(
+            `-${name}: short options must only use a single character`,
+          );
+          return [];
+        }
+
+        return [{ type: "option", name }];
+      }
     }
+
+    return [{ type: "free", value: arg }];
   });
 
   return { elements, errors };
@@ -97,5 +108,13 @@ if (import.meta.vitest) {
         "---b",
       ]),
     ).toMatchSnapshot();
+  });
+
+  test("- is not interpreted as an option", () => {
+    expect(parse(["-"])).toMatchSnapshot();
+  });
+
+  test("-- is interpreted as the end of options", () => {
+    expect(parse(["--", "-a"])).toMatchSnapshot();
   });
 }

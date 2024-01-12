@@ -11,10 +11,10 @@ parameter specification:
 import { optane, t, printUsage } from "optane";
 
 const cli = optane(process.argv, {
-  foo: t.string(),
-  verbose: t.bool().alias("v"),
-  some: t.string(),
-  i: t.int().repeats().help("Custom help text"),
+  foo: t.string,
+  verbose: t.bool.alias("v"),
+  some: t.string,
+  i: t.int.repeats().help("Custom help text"),
   forgotten: t.oneOf("yes", "no").default("yes"),
 });
 
@@ -58,10 +58,10 @@ the argv and returning the parsed options, just like calling `optane` normally.
 
 ```typescript
 const cli = optane({
-  foo: t.string(),
-  verbose: t.bool().alias("v"),
-  some: t.string(),
-  i: t.int().repeats().help("Custom help text"),
+  foo: t.string,
+  verbose: t.bool.alias("v"),
+  some: t.string,
+  i: t.int.repeats().help("Custom help text"),
   forgotten: t.oneOf("yes", "no").default("yes"),
 });
 

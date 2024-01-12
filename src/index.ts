@@ -46,7 +46,7 @@ export type Result<S extends Spec> = {
 export type Optane<S extends Spec> = (argv: string[]) => Result<S>;
 
 function compile<S extends Spec>(spec: S): Optane<S> {
-  let specWithHelp = { help: t.bool().alias("h"), ...spec };
+  let specWithHelp = { help: t.bool.alias("h"), ...spec };
   let aliases = flatMapObject(specWithHelp, (canonicalName, handler) =>
     handler.alias().map((alias) => [alias, canonicalName]),
   );
@@ -155,11 +155,11 @@ if (import.meta.vitest) {
   });
 
   test("basic string option", () => {
-    expect(optane(["--foo", "bar"], { foo: t.string() })).toMatchSnapshot();
+    expect(optane(["--foo", "bar"], { foo: t.string })).toMatchSnapshot();
   });
 
   test("string option requires argument", () => {
-    let sut = optane({ wrong: t.string() });
+    let sut = optane({ wrong: t.string });
 
     expect(sut(["--wrong"])).toMatchSnapshot();
     expect(sut(["--wrong", "--wrong"])).toMatchSnapshot();
@@ -172,45 +172,45 @@ if (import.meta.vitest) {
   test("boolean options", () => {
     expect(
       optane(["--is-cool", "--awesome"], {
-        isCool: t.bool(),
-        awesome: t.bool(),
-        epic: t.bool(),
+        isCool: t.bool,
+        awesome: t.bool,
+        epic: t.bool,
       }),
     ).toMatchSnapshot();
   });
 
   test("string option with default", () => {
-    expect(optane([], { food: t.string().default("bread") })).toMatchSnapshot();
+    expect(optane([], { food: t.string.default("bread") })).toMatchSnapshot();
   });
 
   test("mixed options and arguments", () => {
     expect(
       optane(["a", "--foo", "bar", "--baz", "--bux", "something", "else"], {
-        foo: t.string(),
-        baz: t.bool(),
-        bux: t.string(),
+        foo: t.string,
+        baz: t.bool,
+        bux: t.string,
       }),
     ).toMatchSnapshot();
   });
 
   test("option with long alias", () => {
     expect(
-      optane(["--other", "name"], { foo: t.string().alias("other") }),
+      optane(["--other", "name"], { foo: t.string.alias("other") }),
     ).toMatchSnapshot();
   });
 
   test("option with short alias", () => {
     expect(
-      optane(["-o", "name"], { foo: t.string().alias("o") }),
+      optane(["-o", "name"], { foo: t.string.alias("o") }),
     ).toMatchSnapshot();
   });
 
   test("short canonical option is rendered properly for error", () => {
-    expect(optane(["--foo"], { o: t.string().alias("foo") })).toMatchSnapshot();
+    expect(optane(["--foo"], { o: t.string.alias("foo") })).toMatchSnapshot();
   });
 
   test("int option", () => {
-    const sut = optane({ port: t.int() });
+    const sut = optane({ port: t.int });
 
     expect(sut(["--port", "8080"])).toMatchSnapshot();
     expect(sut(["--port", "nope"])).toMatchSnapshot();

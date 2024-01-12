@@ -21,6 +21,7 @@ module.exports = {
       "error",
       { fixStyle: "inline-type-imports" },
     ],
+    "@typescript-eslint/no-confusing-void-expression": "off",
     "@typescript-eslint/no-unused-vars": "off",
     "n/no-missing-import": "off",
     "prefer-const": "off",

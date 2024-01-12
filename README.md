@@ -19,7 +19,7 @@ const cli = optane(process.argv, {
 });
 
 if (cli.options.help) {
-  printUsage("Awesome CLI v1.0.0", cli);
+  printUsage("cli", "Awesome CLI v1.0.0", cli);
 } else {
   console.log("Options:\n", cli.options);
   console.log("\nArguments:\n", cli.args);
@@ -40,7 +40,7 @@ $ node .\cli.js -h
 Awesome CLI v1.0.0
 
 Usage:
-  .\cli.js [options] [arguments...]
+  cli [options] [arguments...]
 
 Options:
   -h | --help              Show help

@@ -5,6 +5,7 @@ import * as t from "./handlers.ts";
 
 export type * from "./types.ts";
 export * as t from "./handlers.ts";
+export * from "./usage.ts";
 
 function flatMapObject<K extends string, V, L extends string, U>(
   obj: Record<K, V>,
@@ -27,7 +28,10 @@ function formatOption(name: string): string {
 }
 
 function compile<S extends Spec>(spec: S): Optane<S> {
-  let specWithHelp = { help: t.bool.alias("h"), ...spec };
+  let specWithHelp = {
+    help: t.bool.alias("h").help("Display help information"),
+    ...spec,
+  };
   let aliases = flatMapObject(specWithHelp, (canonicalName, handler) =>
     handler.alias().map((alias) => [alias, canonicalName]),
   );

@@ -66,12 +66,23 @@ export type Handler<T, D extends T | undefined> = {
   alias(): string[];
 
   /**
-   * Set new aliases for this handler.
+   * Set new aliases for this Handler.
    *
    * @param names - One or more aliases to assign
    * @returns A new Handler with the defined aliases
    */
   alias(...names: string[]): Handler<T, D>;
+
+  /** Get help text for this Handler. */
+  help(): string | undefined;
+
+  /**
+   * Set help text for this Handler.
+   *
+   * @param text - The help text
+   * @returns A new Handler with the defined help text
+   */
+  help(text: string): Handler<T, D>;
 };
 
 /**

@@ -41,5 +41,8 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "yarn@4.0.2"
+  "packageManager": "yarn@4.0.2",
+  "dependencies": {
+    "ts-dedent": "^2.2.0"
+  }
 }

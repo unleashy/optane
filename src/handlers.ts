@@ -19,10 +19,12 @@ export function createHandler<T>(
   class Impl<D extends T | undefined> implements Handler<T, D> {
     readonly #default: D;
     readonly #aliases: string[] = [];
+    readonly #help: string | undefined;
 
-    constructor(default_: D, aliases: string[]) {
+    constructor(default_: D, aliases: string[], help: string | undefined) {
       this.#default = default_;
       this.#aliases = aliases;
+      this.#help = help;
     }
 
     exec(elements: Element[], i: number): HandlerResult<T> {
@@ -35,7 +37,7 @@ export function createHandler<T>(
       if (value === undefined) {
         return this.#default;
       } else {
-        return new Impl(value, this.#aliases);
+        return new Impl(value, this.#aliases, this.#help);
       }
     }
 
@@ -45,12 +47,26 @@ export function createHandler<T>(
       if (names.length === 0) {
         return this.#aliases;
       } else {
-        return new Impl(this.#default, [...this.#aliases, ...names]);
+        return new Impl(
+          this.#default,
+          [...this.#aliases, ...names],
+          this.#help,
+        );
+      }
+    }
+
+    help(): string | undefined;
+    help(text: string): Handler<T, D>;
+    help(text?: string): string | Handler<T, D> | undefined {
+      if (text === undefined) {
+        return this.#help;
+      } else {
+        return new Impl(this.#default, this.#aliases, text);
       }
     }
   }
 
-  return new Impl(undefined, []);
+  return new Impl(undefined, [], undefined);
 }
 
 /**

@@ -3333,6 +3333,7 @@ __metadata:
     eslint-plugin-n: "npm:^16.6.1"
     eslint-plugin-unicorn: "npm:^50.0.1"
     prettier: "npm:^3.1.1"
+    ts-dedent: "npm:^2.2.0"
     typedoc: "npm:^0.25.7"
     typescript: "npm:^5.3.3"
     unbuild: "npm:^2.0.0"
@@ -4531,6 +4532,13 @@ __metadata:
   peerDependencies:
     typescript: ">=4.2.0"
   checksum: 9408338819c3aca2a709f0bc54e3f874227901506cacb1163612a6c8a43df224174feb965a5eafdae16f66fc68fd7bfee8d3275d0fa73fbb8699e03ed26520c9
+  languageName: node
+  linkType: hard
+
+"ts-dedent@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "ts-dedent@npm:2.2.0"
+  checksum: 175adea838468cc2ff7d5e97f970dcb798bbcb623f29c6088cb21aa2880d207c5784be81ab1741f56b9ac37840cbaba0c0d79f7f8b67ffe61c02634cafa5c303
   languageName: node
   linkType: hard
 

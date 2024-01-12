@@ -1,3 +1,5 @@
+import type { Element } from "./types.ts";
+
 function snakeToCamel(snake: string): string {
   return snake.replaceAll(
     /([^-])-([^-])/g,
@@ -5,13 +7,10 @@ function snakeToCamel(snake: string): string {
   );
 }
 
-export type Element =
-  | { type: "option"; name: string }
-  | { type: "free"; value: string }
-  | { type: "end-options" };
-
+/** @internal */
 export type Result = { elements: Element[]; errors: string[] };
 
+/** @internal */
 export function parse(argv: string[]): Result {
   let cleanArgv = argv
     .map((value) => value.trim())

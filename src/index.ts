@@ -1,7 +1,10 @@
 import assert from "node:assert/strict";
+import type { Spec, Options, Result, Optane } from "./types.ts";
 import { parse } from "./parser.ts";
 import * as t from "./handlers.ts";
-import type { Handler, HandlerType } from "./handlers.ts";
+
+export type * from "./types.ts";
+export * as t from "./handlers.ts";
 
 function flatMapObject<K extends string, V, L extends string, U>(
   obj: Record<K, V>,
@@ -22,28 +25,6 @@ function mapValues<K extends string, V, U>(
 function formatOption(name: string): string {
   return name.length === 1 ? `-${name}` : `--${name}`;
 }
-
-export type Spec = Record<string, Handler<unknown, unknown>>;
-
-export type Options<S extends Spec> = { help: boolean } & {
-  [P in keyof S]: HandlerType<S[P]>;
-};
-
-export type Result<S extends Spec> = {
-  /**
-   * The parsed options, as defined in your specification. Also includes the
-   * `help` boolean option.
-   */
-  options: Options<S>;
-
-  /** Any remaining positional arguments. */
-  args: string[];
-
-  /** Type or parse errors produced during processing */
-  errors: string[];
-};
-
-export type Optane<S extends Spec> = (argv: string[]) => Result<S>;
 
 function compile<S extends Spec>(spec: S): Optane<S> {
   let specWithHelp = { help: t.bool.alias("h"), ...spec };
@@ -112,12 +93,42 @@ function compile<S extends Spec>(spec: S): Optane<S> {
       }
     }
 
-    return { options: options as Options<S>, args, errors };
+    return { options: options as Options<S>, args, errors, spec: specWithHelp };
   };
 }
 
-export function optane<S extends Spec>(spec: S): Optane<S>;
+/**
+ * Parses a command-line invocation `argv` into a {@link Result} based on a
+ * given {@link Spec}.
+ *
+ * @remarks
+ * The option specification must be an object associating option names to
+ * {@link Handler | Handlers}; upon encountering an option, the associated
+ * Handler will be executed to parse its argument(s) if any, and so on until
+ * every option has been handled. Any remaining arguments are also returned in
+ * the Result, as positional `args`.
+ *
+ * @typeParam S - Type of `spec`, used for stronger typechecking
+ * @param argv - Command-line arguments array. If exactly equal to node’s
+ *   `process.argv`, then the first two arguments are ignored (the binary path
+ *   and the script path)
+ * @param spec - The option specification
+ * @returns Result object with any options as per spec, remaining positional
+ *   arguments, and error messages in case of bad input.
+ */
 export function optane<S extends Spec>(argv: string[], spec: S): Result<S>;
+
+/**
+ * Curried version of {@link optane}. Delays parsing of a command-line
+ * invocation by just taking the {@link Spec}—you can then call the returned
+ * function with `argv` to get a {@link Result}.
+ *
+ * @typeParam S - Type of `spec`, used for stronger typechecking
+ * @param spec - The option specification
+ * @returns A function taking in a command-line invocation to parse
+ */
+export function optane<S extends Spec>(spec: S): Optane<S>;
+
 export function optane<S extends Spec>(
   argvOrSpec: string[] | S,
   spec?: S,
@@ -128,8 +139,6 @@ export function optane<S extends Spec>(
     return compile(argvOrSpec as S);
   }
 }
-
-export * as t from "./handlers.ts";
 
 ////////////////////////////////////////////////////////////////////////////////
 

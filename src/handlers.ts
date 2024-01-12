@@ -1,29 +1,18 @@
-import { type Element } from "./parser.ts";
+import type { Element, Handler, HandlerResult } from "./types.ts";
 
-export const HandlerError = {
+const HandlerError = {
   unknown: "unknown problem",
   missingValue: "missing value for option",
   notInt: "expected an integer",
   notOneOf: "expected one of the valid values",
 } as const;
 
-export type HandlerResult<T> =
-  | { ok: true; value: T; nextIndex: number }
-  | { ok: false; error: string };
-export type Handler<T, D extends T | undefined> = {
-  exec(elements: Element[], i: number): HandlerResult<T>;
-
-  default(): D;
-  default(value: T): Handler<T, T>;
-
-  alias(): string[];
-  alias(...names: string[]): Handler<T, D>;
-};
-
-export type HandlerType<H> = H extends Handler<infer T, infer D>
-  ? T | D
-  : never;
-
+/**
+ * Factory for {@link Handler}.
+ *
+ * @param exec - The function to call when this Handler is executed.
+ * @returns A properly implemented Handler.
+ */
 export function createHandler<T>(
   exec: (elements: Element[], i: number) => HandlerResult<T>,
 ): Handler<T, undefined> {
@@ -64,6 +53,10 @@ export function createHandler<T>(
   return new Impl(undefined, []);
 }
 
+/**
+ * Handler that expects a single argument and uses it as the value without any
+ * further processing. Fails if no argument is present.
+ */
 export const string = createHandler((elements, i) => {
   let next = elements[i] as Element | undefined;
   if (next && next.type === "free") {
@@ -73,12 +66,21 @@ export const string = createHandler((elements, i) => {
   }
 });
 
+/**
+ * Handler that expects no arguments; always returns `true`. Meant for flag
+ * options. If an option is not present, it defaults to `false`.
+ */
 export const bool = createHandler((_elements, i) => ({
   ok: true,
   value: true,
   nextIndex: i,
 })).default(false);
 
+/**
+ * Handler that expects an argument and tries to parse it into an integer.
+ * Fails if it can’t parse its argument to an integer or if no argument is
+ * present.
+ */
 export const int = createHandler((elements, i) => {
   let next = elements[i] as Element | undefined;
   if (next && next.type === "free") {
@@ -92,6 +94,13 @@ export const int = createHandler((elements, i) => {
   }
 });
 
+/**
+ * Handler that expects an argument and that argument must be exactly equal to
+ * one of the given `strings`. Fails if its argument is not equal to any of the
+ * given `strings` or if no argument is present.
+ *
+ * @param strings - The set of strings to expect
+ */
 export const oneOf = <K extends string>(...strings: [K, ...K[]]) =>
   createHandler((elements, i) => {
     let next = elements[i] as Element | undefined;

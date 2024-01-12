@@ -8,6 +8,10 @@ exports[`-- represents end of options 1`] = `
     "foo": undefined,
     "help": false,
   },
+  "spec": {
+    "foo": Impl {},
+    "help": Impl {},
+  },
 }
 `;
 
@@ -20,6 +24,10 @@ exports[`-- represents end of options 2`] = `
   "options": {
     "foo": undefined,
     "help": false,
+  },
+  "spec": {
+    "foo": Impl {},
+    "help": Impl {},
   },
 }
 `;
@@ -36,6 +44,10 @@ exports[`-- represents end of options 3`] = `
     "foo": undefined,
     "help": false,
   },
+  "spec": {
+    "foo": Impl {},
+    "help": Impl {},
+  },
 }
 `;
 
@@ -46,6 +58,10 @@ exports[`basic string option 1`] = `
   "options": {
     "foo": "bar",
     "help": false,
+  },
+  "spec": {
+    "foo": Impl {},
+    "help": Impl {},
   },
 }
 `;
@@ -60,6 +76,12 @@ exports[`boolean options 1`] = `
     "help": false,
     "isCool": true,
   },
+  "spec": {
+    "awesome": Impl {},
+    "epic": Impl {},
+    "help": Impl {},
+    "isCool": Impl {},
+  },
 }
 `;
 
@@ -73,6 +95,9 @@ exports[`curried 1`] = `
   "options": {
     "help": false,
   },
+  "spec": {
+    "help": Impl {},
+  },
 }
 `;
 
@@ -82,6 +107,9 @@ exports[`empty spec 1`] = `
   "errors": [],
   "options": {
     "help": false,
+  },
+  "spec": {
+    "help": Impl {},
   },
 }
 `;
@@ -93,6 +121,9 @@ exports[`help option is always present 1`] = `
   "options": {
     "help": true,
   },
+  "spec": {
+    "help": Impl {},
+  },
 }
 `;
 
@@ -102,6 +133,9 @@ exports[`help option is always present 2`] = `
   "errors": [],
   "options": {
     "help": true,
+  },
+  "spec": {
+    "help": Impl {},
   },
 }
 `;
@@ -113,6 +147,10 @@ exports[`int option 1`] = `
   "options": {
     "help": false,
     "port": 8080,
+  },
+  "spec": {
+    "help": Impl {},
+    "port": Impl {},
   },
 }
 `;
@@ -128,6 +166,10 @@ exports[`int option 2`] = `
   "options": {
     "help": false,
     "port": undefined,
+  },
+  "spec": {
+    "help": Impl {},
+    "port": Impl {},
   },
 }
 `;
@@ -145,6 +187,12 @@ exports[`mixed options and arguments 1`] = `
     "foo": "bar",
     "help": false,
   },
+  "spec": {
+    "baz": Impl {},
+    "bux": Impl {},
+    "foo": Impl {},
+    "help": Impl {},
+  },
 }
 `;
 
@@ -155,6 +203,10 @@ exports[`oneOf option 1`] = `
   "options": {
     "help": false,
     "verbose": "low",
+  },
+  "spec": {
+    "help": Impl {},
+    "verbose": Impl {},
   },
 }
 `;
@@ -167,6 +219,10 @@ exports[`oneOf option 2`] = `
     "help": false,
     "verbose": "medium",
   },
+  "spec": {
+    "help": Impl {},
+    "verbose": Impl {},
+  },
 }
 `;
 
@@ -177,6 +233,10 @@ exports[`oneOf option 3`] = `
   "options": {
     "help": false,
     "verbose": "high",
+  },
+  "spec": {
+    "help": Impl {},
+    "verbose": Impl {},
   },
 }
 `;
@@ -193,6 +253,10 @@ exports[`oneOf option 4`] = `
     "help": false,
     "verbose": undefined,
   },
+  "spec": {
+    "help": Impl {},
+    "verbose": Impl {},
+  },
 }
 `;
 
@@ -204,6 +268,10 @@ exports[`option with long alias 1`] = `
     "foo": "name",
     "help": false,
   },
+  "spec": {
+    "foo": Impl {},
+    "help": Impl {},
+  },
 }
 `;
 
@@ -214,6 +282,10 @@ exports[`option with short alias 1`] = `
   "options": {
     "foo": "name",
     "help": false,
+  },
+  "spec": {
+    "foo": Impl {},
+    "help": Impl {},
   },
 }
 `;
@@ -229,6 +301,9 @@ exports[`positional arguments are forwarded 1`] = `
   "options": {
     "help": false,
   },
+  "spec": {
+    "help": Impl {},
+  },
 }
 `;
 
@@ -242,6 +317,10 @@ exports[`short canonical option is rendered properly for error 1`] = `
     "help": false,
     "o": undefined,
   },
+  "spec": {
+    "help": Impl {},
+    "o": Impl {},
+  },
 }
 `;
 
@@ -251,6 +330,9 @@ exports[`skips the first two argv if it is process.argv 1`] = `
   "errors": [],
   "options": {
     "help": false,
+  },
+  "spec": {
+    "help": Impl {},
   },
 }
 `;
@@ -264,6 +346,10 @@ exports[`string option requires argument 1`] = `
   "options": {
     "help": false,
     "wrong": undefined,
+  },
+  "spec": {
+    "help": Impl {},
+    "wrong": Impl {},
   },
 }
 `;
@@ -279,6 +365,10 @@ exports[`string option requires argument 2`] = `
     "help": false,
     "wrong": undefined,
   },
+  "spec": {
+    "help": Impl {},
+    "wrong": Impl {},
+  },
 }
 `;
 
@@ -289,6 +379,10 @@ exports[`string option with default 1`] = `
   "options": {
     "food": "bread",
     "help": false,
+  },
+  "spec": {
+    "food": Impl {},
+    "help": Impl {},
   },
 }
 `;
@@ -303,6 +397,9 @@ exports[`undefined options are errors 1`] = `
   ],
   "options": {
     "help": false,
+  },
+  "spec": {
+    "help": Impl {},
   },
 }
 `;

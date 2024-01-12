@@ -19,7 +19,7 @@ const cli = optane(process.argv, {
 });
 
 if (cli.options.help) {
-  printUsage("Awesome CLI v1.0.0", result);
+  printUsage("Awesome CLI v1.0.0", cli);
 } else {
   console.log("Options:\n", cli.options);
   console.log("\nArguments:\n", cli.args);

@@ -1,4 +1,4 @@
-import dedent from "ts-dedent";
+import { dedent } from "ts-dedent";
 import type { Help, Result, Spec } from "./types.ts";
 
 /**

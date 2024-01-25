@@ -30,6 +30,18 @@ export type HandlerResult<T> =
     };
 
 /**
+ * Holds help information for {@link Handler | Handlers}.
+ * @interface
+ */
+export type Help = {
+  /** Usage text if any */
+  text?: string;
+
+  /** Argument name if any */
+  argName?: string;
+};
+
+/**
  * Parses {@link Element | Elements} to give them a richer representation.
  * {@link Spec | Specs} associate Handlers with option names.
  *
@@ -73,8 +85,8 @@ export type Handler<T, D extends T | undefined> = {
    */
   alias(...names: string[]): Handler<T, D>;
 
-  /** Get help text for this Handler. */
-  help(): string | undefined;
+  /** Get help info for this Handler. */
+  help(): Help;
 
   /**
    * Set help text for this Handler.

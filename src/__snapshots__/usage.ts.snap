@@ -1,18 +1,5 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`synopsis is printed 1`] = `
-"Test CLI v1.0.0
-
-Usage:
-  test [options] [arguments]
-
-Options:
-  -a | --aa | --aaaaa   aaaaa
-  --foo                 Crimbus nimbus
-  -h | --help           Display help information
-  --xy                  Some number"
-`;
-
 exports[`usage has synopsis and options 1`] = `
 "Test CLI v1.0.0
 
@@ -21,7 +8,8 @@ Usage:
 
 Options:
   -a | --aa | --aaaaa   aaaaa
-  --foo                 Crimbus nimbus
+  --bingus <on | off>   bingus
+  --foo <string>        Crimbus nimbus
   -h | --help           Display help information
-  --xy                  Some number"
+  --xy [int]            Some number (default 123)"
 `;

@@ -1,4 +1,4 @@
-import type { Element, Handler, HandlerResult } from "./types.ts";
+import type { Element, Handler, HandlerResult, Help } from "./types.ts";
 
 const HandlerError = {
   unknown: "unknown problem",
@@ -11,17 +11,20 @@ const HandlerError = {
  * Factory for {@link Handler}.
  *
  * @param exec - The function to call when this Handler is executed.
+ * @param argName - Name for the argument this handler takes, if any. Put in
+ *   usage information.
  * @returns A properly implemented Handler.
  */
 export function createHandler<T>(
   exec: (elements: Element[], i: number) => HandlerResult<T>,
+  argName?: string,
 ): Handler<T, undefined> {
   class Impl<D extends T | undefined> implements Handler<T, D> {
     readonly #default: D;
     readonly #aliases: string[] = [];
-    readonly #help: string | undefined;
+    readonly #help: Help;
 
-    constructor(default_: D, aliases: string[], help: string | undefined) {
+    constructor(default_: D, aliases: string[], help: Help) {
       this.#default = default_;
       this.#aliases = aliases;
       this.#help = help;
@@ -55,18 +58,18 @@ export function createHandler<T>(
       }
     }
 
-    help(): string | undefined;
+    help(): Help;
     help(text: string): Handler<T, D>;
-    help(text?: string): string | Handler<T, D> | undefined {
+    help(text?: string): Help | Handler<T, D> {
       if (text === undefined) {
         return this.#help;
       } else {
-        return new Impl(this.#default, this.#aliases, text);
+        return new Impl(this.#default, this.#aliases, { text, argName });
       }
     }
   }
 
-  return new Impl(undefined, [], undefined);
+  return new Impl(undefined, [], { argName });
 }
 
 /**
@@ -80,7 +83,7 @@ export const string = createHandler((elements, i) => {
   } else {
     return { ok: false, error: HandlerError.missingValue };
   }
-});
+}, "string");
 
 /**
  * Handler that expects no arguments; always returns `true`. Meant for flag
@@ -108,7 +111,7 @@ export const int = createHandler((elements, i) => {
   } else {
     return { ok: false, error: HandlerError.missingValue };
   }
-});
+}, "int");
 
 /**
  * Handler that expects an argument and that argument must be exactly equal to
@@ -129,7 +132,7 @@ export const oneOf = <K extends string>(...strings: [K, ...K[]]) =>
     } else {
       return { ok: false, error: HandlerError.missingValue };
     }
-  });
+  }, strings.join(" | "));
 
 ////////////////////////////////////////////////////////////////////////////////
 

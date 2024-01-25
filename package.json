@@ -24,6 +24,9 @@
     "build": "yarn lint && yarn tsc --noEmit --skipLibCheck && unbuild",
     "test": "vitest"
   },
+  "dependencies": {
+    "ts-dedent": "^2.2.0"
+  },
   "devDependencies": {
     "@types/node": "^20",
     "@typescript-eslint/eslint-plugin": "^6.18.1",
@@ -41,8 +44,5 @@
   "engines": {
     "node": ">=20"
   },
-  "packageManager": "yarn@4.0.2",
-  "dependencies": {
-    "ts-dedent": "^2.2.0"
-  }
+  "packageManager": "yarn@4.0.2"
 }

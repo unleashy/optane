@@ -31,14 +31,16 @@ export function parse(argv: string[]): Result {
         return [{ type: "option", name }];
       } else if (arg.startsWith("-") && arg !== "-") {
         let name = arg.slice(1);
-        if (name.length > 1) {
-          errors.push(
-            `-${name}: short options must only use a single character`,
-          );
-          return [];
-        }
+        if (!/^\d/.test(name)) {
+          if (name.length > 1) {
+            errors.push(
+              `-${name}: short options must only use a single character`,
+            );
+            return [];
+          }
 
-        return [{ type: "option", name }];
+          return [{ type: "option", name }];
+        }
       }
     }
 
@@ -115,5 +117,9 @@ if (import.meta.vitest) {
 
   test("-- is interpreted as the end of options", () => {
     expect(parse(["--", "-a"])).toMatchSnapshot();
+  });
+
+  test("short option starting with a number is not interpreted as an option", () => {
+    expect(parse(["-1", "-2", "-956"])).toMatchSnapshot();
   });
 }

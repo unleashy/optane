@@ -275,6 +275,21 @@ exports[`option with long alias 1`] = `
 }
 `;
 
+exports[`option with negative int argument 1`] = `
+{
+  "args": [],
+  "errors": [],
+  "options": {
+    "foo": -1,
+    "help": false,
+  },
+  "spec": {
+    "foo": Impl {},
+    "help": Impl {},
+  },
+}
+`;
+
 exports[`option with short alias 1`] = `
 {
   "args": [],

@@ -178,6 +178,26 @@ exports[`one short option 1`] = `
 }
 `;
 
+exports[`short option starting with a number is not interpreted as an option 1`] = `
+{
+  "elements": [
+    {
+      "type": "free",
+      "value": "-1",
+    },
+    {
+      "type": "free",
+      "value": "-2",
+    },
+    {
+      "type": "free",
+      "value": "-956",
+    },
+  ],
+  "errors": [],
+}
+`;
+
 exports[`short options must be a single character 1`] = `
 {
   "elements": [],

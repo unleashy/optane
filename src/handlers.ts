@@ -50,6 +50,15 @@ export function createHandler<T>(
       if (names.length === 0) {
         return this.#aliases;
       } else {
+        if (names.some((name) => /^\d/.test(name))) {
+          let invalidAliases = names
+            .filter((name) => /^\d/.test(name))
+            .join(", ");
+          throw new Error(
+            `Aliases must not start with a number. Invalid alias(es): ${invalidAliases}`,
+          );
+        }
+
         return new Impl(
           this.#default,
           [...this.#aliases, ...names],
@@ -103,7 +112,7 @@ export const bool = createHandler((_elements, i) => ({
 export const int = createHandler((elements, i) => {
   let next = elements[i] as Element | undefined;
   if (next && next.type === "free") {
-    if (/^\d+$/.test(next.value)) {
+    if (/^[+-]?\d+$/.test(next.value)) {
       return { ok: true, value: Number(next.value), nextIndex: i + 1 };
     } else {
       return { ok: false, error: HandlerError.notInt };
@@ -191,6 +200,16 @@ if (import.meta.vitest) {
         value: 1234,
         nextIndex: 1,
       });
+      expect(int.exec([{ type: "free", value: "-5678" }], 0)).toEqual({
+        ok: true,
+        value: -5678,
+        nextIndex: 1,
+      });
+      expect(int.exec([{ type: "free", value: "+9012" }], 0)).toEqual({
+        ok: true,
+        value: 9012,
+        nextIndex: 1,
+      });
     });
 
     it("expects an argument", () => {
@@ -244,5 +263,9 @@ if (import.meta.vitest) {
         error: HandlerError.notOneOf,
       });
     });
+  });
+
+  it("throws if given option with numeric alias", () => {
+    expect(() => int.alias("123")).toThrowErrorMatchingSnapshot();
   });
 }

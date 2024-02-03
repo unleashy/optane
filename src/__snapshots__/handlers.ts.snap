@@ -1,0 +1,3 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`throws if given option with numeric alias 1`] = `[Error: Aliases must not start with a number. Invalid alias(es): 123]`;

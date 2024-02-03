@@ -252,4 +252,10 @@ if (import.meta.vitest) {
     expect(sut(["--", "--foo"])).toMatchSnapshot();
     expect(sut(["--foo", "--", "--foo"])).toMatchSnapshot();
   });
+
+  test("option with negative int argument", () => {
+    const sut = optane({ foo: t.int });
+
+    expect(sut(["--foo", "-1"])).toMatchSnapshot();
+  });
 }
